@@ -1,0 +1,86 @@
+<h2>Esri Search</h2>
+
+<form id="searchForm">
+    Name: <input id="name">
+    Event #: <input id="event_number">
+    Activity Type:
+    <select id="activity_type">
+        <option value="">-- All Activities --</option>
+
+        <option value="Protective">Protective Order</option>
+        <option value="Peace">Peace Order</option>
+        <option value="Show Cause">Show Cause</option>
+        <option value="Service">Service Attempt</option>
+        <option value="Eviction">Eviction</option>
+        <option value="DV">DV</option>
+
+        <option value="Transport">Transport</option>
+        <option value="Training">Training</option>
+        <option value="Admin">Admin</option>
+
+        <option value="Assist">Assistance</option>
+        <option value="Enforcement">Enforcement</option>
+        <option value="Patrol">Patrol Check</option>
+        <option value="Vehicle">Vehicle Update</option>
+    </select>
+    Start: <input id="start" type="date">
+    End: <input id="end" type="date">
+    <button type="submit">Search</button>
+</form>
+<h3 id="count"></h3>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Deputy</th>
+            <th>Event Number</th>
+            <th>Status</th>
+            <th>Activity Type</th>
+            <th>Force</th>
+            <th>BWC</th>
+            
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+</table>
+
+<script>
+   
+    document.getElementById("searchForm").addEventListener("submit", function(e) {
+    e.preventDefault();   // stop page refresh
+    search();             // call your existing function
+    });
+function search() {
+    const name = document.getElementById("name").value;
+    const event_number = document.getElementById("event_number").value;
+    const activity_type = document.getElementById("activity_type").value;
+    const start = document.getElementById("start").value;
+    const end = document.getElementById("end").value;
+
+    fetch(`/api/service_attempts?name=${name}&activity_type=${activity_type}&event_number=${event_number}&start=${start}&end=${end}`)
+        .then(r => r.json())
+        .then(d => {
+
+            document.getElementById("count").innerText =
+                `${d.count} result(s)`;
+
+            const tbody = document.getElementById("rows");
+            tbody.innerHTML = "";
+
+            d.records.forEach(r => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${r.name}</td>
+                    <td>${r.event_number}</td>
+                    <td>${r.event_status}</td>
+                    <td>${r.activity_type}</td>
+                    <td>${r.force_used}</td>
+                    <td>${r.bwc}</td>
+                    <td>${r.arrival_time}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        });
+}
+</script>
