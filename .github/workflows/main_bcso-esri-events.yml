@@ -71,7 +71,3 @@ jobs:
           app-name: "bcso-esri-events"
           slot-name: "Production"
           package: .
-<<<<<<< HEAD
-          
-=======
->>>>>>> c723b70 (1)
