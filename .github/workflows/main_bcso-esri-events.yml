@@ -73,6 +73,7 @@ jobs:
         with:
           app-name: 'bcso-esri-events'
           slot-name: 'Production'
-          package: .
+          
 
           
+
